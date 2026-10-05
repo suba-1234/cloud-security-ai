@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cloud Security Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+            background-color: #f4f6f8;
+        }
+
+        h1 {
+            color: #222;
+        }
+
+        .summary {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            width: 200px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #ccc;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #222;
+            color: white;
+        }
+
+        .Critical {
+            color: red;
+            font-weight: bold;
+        }
+
+        .High {
+            color: orange;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>AI-Based Cloud Security Dashboard</h1>
+
+    <div class="summary">
+
+        <div class="card">
+            <h3>Total Findings</h3>
+            <h2>{{ findings|length }}</h2>
+        </div>
+
+        <div class="card">
+            <h3>Security Health</h3>
+            <h2>{{health_score}}/100</h2>
+        </div>
+
+        <div class="card">
+            <h3>System Status</h3>
+            <h2>Active</h2>
+        </div>
+
+    </div>
+
+    <h2>Security Findings</h2>
+
+    <table>
+
+        <tr>
+            <th>Resource</th>
+            <th>Security Issue</th>
+            <th>Risk Score</th>
+            <th>Severity</th>
+            <th>Recommendation</th>
+            <th>Action</th>
+        </tr>
+
+        {% for finding in findings %}
+
+        <tr>
+            <td>{{ finding.resource }}</td>
+
+            <td>{{ finding.issue }}</td>
+
+            <td>{{ finding.risk }}/100</td>
+
+            <td class="{{ finding.severity }}">
+                {{ finding.severity }}
+            </td>
+
+            <td>{{ finding.recommendation }}</td>
+            <td>
+
+    {% if finding.status == "Pending Approval" %}
+
+        <a href="/approve/{{ finding.id }}">
+            <button>Approve & Remediate</button>
+        </a>
+
+    {% else %}
+
+        <strong style="color: green;">
+    ✓ Remediated
+</strong>
+
+<br>
+
+<small style="color: green;">
+    ✓ Re-scan Verified
+</small>
+
+    {% endif %}
+
+</td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</body>
+</html>
