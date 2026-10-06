@@ -1,6 +1,11 @@
 venv/
 prowler-env/
+checkov-env/
 __pycache__/
 *.pyc
 .env
 output/
+
+terraform/.terraform/
+*.tfstate
+*.tfstate.*

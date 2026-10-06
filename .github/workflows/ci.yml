@@ -37,3 +37,8 @@ jobs:
       - name: Test risk engine
         run: |
           python -c "from risk_engine import calculate_risk; finding={'severity':'Critical','service':'s3','issue':'Public S3 bucket','description':'Resource is publicly exposed'}; score, severity=calculate_risk(finding); assert score >= 90; assert severity == 'Critical'; print('Risk engine test passed')"
+      - name: Install Checkov
+        run: pip install checkov
+
+      - name: Run Checkov Security Scan
+        run: checkov -d terraform
