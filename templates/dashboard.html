@@ -54,6 +54,36 @@
             color: orange;
             font-weight: bold;
         }
+
+        .Medium {
+            color: #d4a000;
+            font-weight: bold;
+        }
+
+        .Low {
+            color: green;
+            font-weight: bold;
+        }
+
+        .pending {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .remediated {
+            color: green;
+            font-weight: bold;
+        }
+
+        .not-verified {
+            color: red;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -70,7 +100,7 @@
 
         <div class="card">
             <h3>Security Health</h3>
-            <h2>{{health_score}}/100</h2>
+            <h2>{{ health_score }}/100</h2>
         </div>
 
         <div class="card">
@@ -89,6 +119,7 @@
             <th>Security Issue</th>
             <th>Risk Score</th>
             <th>Severity</th>
+            <th>AI Risk Explanation</th>
             <th>Recommendation</th>
             <th>Action</th>
         </tr>
@@ -96,40 +127,73 @@
         {% for finding in findings %}
 
         <tr>
-            <td>{{ finding.resource }}</td>
 
-            <td>{{ finding.issue }}</td>
+            <td>
+                {{ finding.resource }}
+            </td>
 
-            <td>{{ finding.risk }}/100</td>
+            <td>
+                {{ finding.issue }}
+            </td>
+
+            <td>
+                {{ finding.risk }}/100
+            </td>
 
             <td class="{{ finding.severity }}">
                 {{ finding.severity }}
             </td>
 
-            <td>{{ finding.recommendation }}</td>
+            <td>
+                {{ finding.ai_explanation }}
+            </td>
+
+            <td>
+                {{ finding.recommendation }}
+            </td>
+
             <td>
 
-    {% if finding.status == "Pending Approval" %}
+                {% if finding.status == "Pending Approval" %}
 
-        <a href="/approve/{{ finding.id }}">
-            <button>Approve & Remediate</button>
-        </a>
+                    <a href="/approve/{{ finding.id }}">
+                        <button>Approve & Remediate</button>
+                    </a>
 
-    {% else %}
+                {% elif finding.status == "Remediation Pending" %}
 
-        <strong style="color: green;">
-    ✓ Remediated
-</strong>
+                    <strong class="pending">
+                        ⚠ Remediation Pending
+                    </strong>
 
-<br>
+                    <br><br>
 
-<small style="color: green;">
-    ✓ Re-scan Verified
-</small>
+                    <small>
+                        {{ finding.remediation_message }}
+                    </small>
 
-    {% endif %}
+                {% elif finding.status == "Remediated" %}
 
-</td>
+                    <strong class="remediated">
+                        ✓ Remediated
+                    </strong>
+
+                    <br>
+
+                    <small>
+                        Re-scan: {{ finding.verification }}
+                    </small>
+
+                {% else %}
+
+                    <strong class="not-verified">
+                        {{ finding.status }}
+                    </strong>
+
+                {% endif %}
+
+            </td>
+
         </tr>
 
         {% endfor %}
