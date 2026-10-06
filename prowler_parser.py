@@ -1,5 +1,6 @@
 import pandas as pd
 import glob
+import os
 
 from risk_engine import calculate_risk
 from ai_explainer import generate_explanation
@@ -10,9 +11,9 @@ def load_prowler_findings():
     files = glob.glob("output/*.csv")
 
     if not files:
-        return []
+       return []
 
-    csv_file = files[0]
+    csv_file = max(files, key=os.path.getsize)
 
     df = pd.read_csv(csv_file, sep=";")
 
